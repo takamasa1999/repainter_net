@@ -1,0 +1,33 @@
+import { useTranslations } from 'next-intl';
+import { Container, Typography, Stack } from "@mui/material";
+import { unstable_setRequestLocale } from "next-intl/server";
+// import SocialLinks from '../SocialLinks';
+import SocialLinks from './SocialLinks';
+
+type Props = {
+ params: { locale: string };
+};
+export default function Page({ params: { locale } }: Props) {
+  // Enable static rendering
+  unstable_setRequestLocale(locale);
+  const t = useTranslations('Index');
+  return (
+    <Container>
+      <Stack spacing={2}>
+        <Typography component={"h1"} variant={"h1"}>
+          {t('title')}
+        </Typography>
+        <Typography component={"p"} variant={"body1"}>
+          {t.rich('greeting')}
+        </Typography>
+        <Typography component={"p"} variant={"body1"}>
+          {t.rich('introduction')}
+        </Typography>
+        <Typography component={"p"} variant={"body1"}>
+          {t('please-subscribe')}
+        </Typography>
+        <SocialLinks/>
+      </Stack>
+    </Container>
+  );
+}

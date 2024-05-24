@@ -1,0 +1,12 @@
+version: '3.8'
+services:
+  construction_notice:
+    image: construction_notice
+    build:
+      context: ./construction_notice
+      dockerfile: Dockerfile
+    volumes:
+      - /etc/letsencrypt:/etc/letsencrypt
+    ports:
+      - 80:80
+      - 443:443

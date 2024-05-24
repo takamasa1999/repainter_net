@@ -1,0 +1,16 @@
+FROM node:18-alpine3.18
+
+# Create and define the node_modules's cache directory.
+WORKDIR /cache
+
+# install app dependencies
+COPY package.json .
+# COPY package-lock.json .
+RUN npm install
+
+WORKDIR /app
+ENV PATH /app/node_modules/.bin:$PATH
+COPY . .
+
+EXPOSE 3000
+CMD cp -rfu /cache/node_modules/. /app/node_modules/ && next dev
