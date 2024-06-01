@@ -36,6 +36,9 @@ nextjs/.vercel
 nextjs/*.tsbuildinfo
 nextjs/next-env.d.ts
 
+# prisma
+nextjs/prisma/migrations
+
 
 # Others
 .env

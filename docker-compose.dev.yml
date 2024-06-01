@@ -10,7 +10,7 @@ services:
       - ./nextjs:/app
     # Keep 3000 port open is necessary to enable hot-reload function for React components
     ports:
-     - '3000:3000'
+      - '3000:3000'
 
   proxy:
     image: proxy

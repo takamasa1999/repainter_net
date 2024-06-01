@@ -1,20 +1,31 @@
+"use client"
+
 import { useTranslations } from 'next-intl';
-import { Container, Typography, Stack } from "@mui/material";
-import { unstable_setRequestLocale } from "next-intl/server";
-import React from 'react';
+import { Container, Button } from "@mui/material";
+import React, { useEffect } from 'react';
 import CompositionContainer from './CompositionContainer';
-// import SocialLinks from './SocialLinks';
+import { callDatabaseApi } from '@/lib/callDatabaseApi';
+// import FormGenerator from '@/components/formGenerator';
 
 type Props = {
- params: { locale: string };
+  params: { locale: string };
 };
 export default function Page({ params: { locale } }: Props) {
-  // Enable static rendering
-  unstable_setRequestLocale(locale);
+  // callDatabaseApi("test", "findMany").then((res) => {
+  //   console.log(res)
+  // })
   const t = useTranslations('Index');
   return (
     <Container>
-        <CompositionContainer url='url' description='description' locale={locale}></CompositionContainer>
+      {/* <FormGenerator /> */}
+
+      <CompositionContainer url='url' description='description' locale={locale}></CompositionContainer>
+      <Button
+      // onClick={createComposition}
+      >
+        Create
+      </Button>
+
       {/* <Stack spacing={2}>
         <Typography component={"h1"} variant={"h1"}>
           {t('title')}

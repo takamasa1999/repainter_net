@@ -8,7 +8,7 @@ type Props = {
 };
 export default function CompositionContainer({ url, description, locale }: Props) {
     // Enable static rendering
-    unstable_setRequestLocale(locale);
+    // unstable_setRequestLocale(locale);
     return (
         <Container>
             {url}, 
