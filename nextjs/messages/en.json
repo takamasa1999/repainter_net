@@ -8,10 +8,11 @@
   "DrawerMenu":{
     "home": "Home",
     "compositions": "Compositions",
-    "shared_links": "Shared links",
-    "recommendations": "Recommendations",
-    "footnotes": "Footnotes",
-    "apps": "apps"
+    "chat_space": "Chat space",
+    "myadmin":"phpmyadmin",
+    "welcome_back": "Welcome back,<br></br> {user}!",
+    "login":"Log-in",
+    "logout":"Log-out"
   },
   "LocaleSwitcher": {
     "label": "Language",

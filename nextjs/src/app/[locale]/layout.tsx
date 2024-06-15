@@ -7,9 +7,13 @@ import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 import '@fortawesome/fontawesome-svg-core/styles.css'
 import ResponsiveDrawer from "@/components/ResponsiveDrawer/index";
-import { NextIntlClientProvider } from 'next-intl';
+import MyCustomNextIntlClientProvider from "@/components/MyCustomNextIntlClientProvider";
 import { getMessages, getTranslations, unstable_setRequestLocale } from 'next-intl/server';
 import { locales } from "@/i18n";
+import { UserProvider } from '@auth0/nextjs-auth0/client';
+import AnimatedCursor from "react-animated-cursor"
+import { Suspense } from "react";
+
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -35,25 +39,30 @@ export async function generateMetadata({
   };
 }
 
-export default async function RootLayout({
+export default async function LocaleLayout({
   children,
   params: { locale }
 }: Props) {
   // Enable static rendering
   unstable_setRequestLocale(locale);
+  const now = new Date()
+  const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
   // Providing all messages to the client
   // side is the easiest way to get started
   const messages = await getMessages();
   return (
-    <html lang="en">
+    <html lang={locale}>
       <body className={inter.className}>
-        <NextIntlClientProvider messages={messages}>
+        {/* <Suspense fallback={"LoadingView..."}> */}
+          <AnimatedCursor innerStyle={{ zIndex: 9999 }} outerStyle={{ zIndex: 9999 }} showSystemCursor={true} />
           <AppRouterCacheProvider>
-            <ResponsiveDrawer>
-                {children}
-            </ResponsiveDrawer>
+            <UserProvider>
+              <MyCustomNextIntlClientProvider messages={messages} locale={locale} now={now} timeZone={timeZone}>
+                <ResponsiveDrawer>{children}</ResponsiveDrawer>
+              </MyCustomNextIntlClientProvider>
+            </UserProvider>
           </AppRouterCacheProvider>
-        </NextIntlClientProvider>
+        {/* </Suspense> */}
       </body>
     </html>
   );

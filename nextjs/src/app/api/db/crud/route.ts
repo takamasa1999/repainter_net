@@ -2,8 +2,7 @@
 import { PrismaClient } from '@prisma/client';
 import qs from "qs";
 import { NextRequest } from 'next/server';
-
-const prisma = new PrismaClient();
+import prisma from '@/lib/db';
 
 type Action = 'findMany' | 'findUnique' | 'create' | 'update' | 'delete';
 

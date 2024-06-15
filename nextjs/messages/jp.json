@@ -8,10 +8,11 @@
   "DrawerMenu": {
     "home": "ホーム",
     "compositions": "作品",
-    "shared_links": "リンク",
-    "recommendations": "おすすめ",
-    "footnotes": "脚注",
-    "apps": "アプリ"
+    "chat_space": "しゃべり場",
+    "myadmin":"phpmyadmin",
+    "welcome_back": "おかえりなさい、<br></br> {user}さん。",
+    "login":"ログイン",
+    "logout":"ログアウト"
   },
   "LocaleSwitcher": {
     "label": "言語",

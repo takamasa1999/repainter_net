@@ -1,46 +1,51 @@
-"use client"
-
-import { useTranslations } from 'next-intl';
-import { Container, Button } from "@mui/material";
-import React, { useEffect } from 'react';
+"use client";
+import { CircularProgress, Container } from "@mui/material";
+import { useEffect } from 'react';
 import CompositionContainer from './CompositionContainer';
-import { callDatabaseApi } from '@/lib/callDatabaseApi';
-// import FormGenerator from '@/components/formGenerator';
+import { useCompositions } from './useCompositions';
+import { useInView } from "react-intersection-observer";
+import { Grid } from "@mui/material";
 
 type Props = {
   params: { locale: string };
 };
+
+
 export default function Page({ params: { locale } }: Props) {
-  // callDatabaseApi("test", "findMany").then((res) => {
-  //   console.log(res)
-  // })
-  const t = useTranslations('Index');
+  const take = 2;
+  const { ref, inView } = useInView({ threshold: 1 })
+  const { compositions, loadMore, loading, hasMore } = useCompositions(locale, take)
+
+  useEffect(() => {
+    if (inView && !loading && hasMore) {
+      loadMore()
+    }
+  }, [inView, loading, loadMore, hasMore])
+
+
   return (
     <Container>
-      {/* <FormGenerator /> */}
-
-      <CompositionContainer url='url' description='description' locale={locale}></CompositionContainer>
-      <Button
-      // onClick={createComposition}
-      >
-        Create
-      </Button>
-
-      {/* <Stack spacing={2}>
-        <Typography component={"h1"} variant={"h1"}>
-          {t('title')}
-        </Typography>
-        <Typography component={"p"} variant={"body1"}>
-          {t.rich('greeting')}
-        </Typography>
-        <Typography component={"p"} variant={"body1"}>
-          {t.rich('introduction')}
-        </Typography>
-        <Typography component={"p"} variant={"body1"}>
-          {t('please-subscribe')}
-        </Typography>
-        <SocialLinks/>
-      </Stack> */}
+      <Grid container spacing={2}>
+        {
+          compositions.map((data, key) => (
+            <Grid item key={key} xs={12} md={6} lg={4}>
+              <CompositionContainer
+                url={data.url}
+                title={data.title}
+                description={data.description}
+              />
+            </Grid>
+          ))
+        }
+        {loading &&
+          // Array.from({ length: take }).map((_, index) => (
+            <Grid item xs={12} md={6} lg={4}>
+              <CircularProgress/>
+            </Grid>
+          // ))
+        }
+      </Grid>
+      <div ref={ref} style={{ height: "1px" }} />
     </Container>
   );
 }

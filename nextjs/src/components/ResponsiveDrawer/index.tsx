@@ -1,27 +1,45 @@
 "use client"
-import * as React from 'react';
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import CssBaseline from '@mui/material/CssBaseline';
-import Drawer from '@mui/material/Drawer';
-import IconButton from '@mui/material/IconButton';
+import { Box, CssBaseline, Drawer, IconButton, Toolbar, Typography, Button, AppBar } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
-import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
 import { useTranslations } from 'next-intl';
+import { useEffect, useState } from 'react';
+import { UserProfile, useUser } from '@auth0/nextjs-auth0/client';
 import DrawerItems from './DrawerItems';
-import { ItemList } from './ItemList';
+import { ItemListUser } from './ItemListUser';
 import LocaleSwitcher from '../LocaleSwitcher';
+import { ItemListAdmin } from './ItemListAdmin';
+import LoginOutMenu from './LoginOutMenu';
 
 const drawerWidth = 240;
 
-interface Props {
-  children?: React.ReactNode;
+function DrawerContents({ user, isAdmin }: {
+  user: UserProfile | undefined;
+  isAdmin: boolean;
+}) {
+  return (
+    <>
+      <Toolbar />
+      <DrawerItems items={ItemListUser} />
+      {isAdmin && <DrawerItems items={ItemListAdmin} />}
+      <LoginOutMenu user={user} />
+    </>
+  );
 }
 
-export default function ResponsiveDrawer(props: Props) {
-  const [mobileOpen, setMobileOpen] = React.useState(false);
-  const [isClosing, setIsClosing] = React.useState(false);
+export default function ResponsiveDrawer(props: {
+  children?: React.ReactNode;
+}) {
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [isClosing, setIsClosing] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const { user } = useUser();
+
+  useEffect(() => {
+    if (user?.email === process.env.NEXT_PUBLIC_ADMIN_EMAIL_ADDRESS) {
+      setIsAdmin(true);
+    }
+  }, [user]);
+
   const t = useTranslations('Metadata');
 
   const handleDrawerClose = () => {
@@ -59,16 +77,10 @@ export default function ResponsiveDrawer(props: Props) {
           >
             <MenuIcon />
           </IconButton>
-          {/* <Stack
-            direction="row"
-            justifyContent="space-between"
-            alignItems="center"
-          > */}
           <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
             {t('title')}
           </Typography>
           <LocaleSwitcher />
-          {/* </Stack> */}
         </Toolbar>
       </AppBar>
       <Box
@@ -76,21 +88,18 @@ export default function ResponsiveDrawer(props: Props) {
         sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
         aria-label="mailbox folders"
       >
-        {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
         <Drawer
           variant="temporary"
           open={mobileOpen}
           onTransitionEnd={handleDrawerTransitionEnd}
           onClose={handleDrawerClose}
-          ModalProps={{
-            keepMounted: true, // Better open performance on mobile.
-          }}
+          ModalProps={{ keepMounted: true }}
           sx={{
             display: { xs: 'block', sm: 'none' },
             '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
           }}
         >
-          <DrawerItems items={ItemList} />
+          <DrawerContents user={user} isAdmin={isAdmin} />
         </Drawer>
         <Drawer
           variant="permanent"
@@ -98,17 +107,21 @@ export default function ResponsiveDrawer(props: Props) {
             display: { xs: 'none', sm: 'block' },
             '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
           }}
-          anchor='left'
           open
         >
-          <DrawerItems items={ItemList} />
+          <DrawerContents user={user} isAdmin={isAdmin} />
         </Drawer>
       </Box>
       <Box
         component="main"
-        sx={{ flexGrow: 1, p: 3, width: { sm: `calc(100% - ${drawerWidth}px)` } }}
+        sx={{
+          flexGrow: 1,
+          p: 3,
+          width: { sm: `calc(100% - ${drawerWidth}px)` },
+          overflow: 'auto', // Ensure content is scrollable if it overflows
+        }}
       >
-        <Toolbar /> {/* In order to set the same margin of the header before children starts */}
+        <Toolbar />
         {props.children}
       </Box>
     </Box>

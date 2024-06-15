@@ -1,21 +1,24 @@
 import { useTranslations } from 'next-intl';
 import { Container, Typography, Stack } from "@mui/material";
-import { unstable_setRequestLocale } from "next-intl/server";
-// import SocialLinks from '../SocialLinks';
 import SocialLinks from './SocialLinks';
+import { unstable_setRequestLocale } from 'next-intl/server';
+
 
 type Props = {
- params: { locale: string };
+  params: { locale: string };
 };
 export default function Page({ params: { locale } }: Props) {
   // Enable static rendering
-  unstable_setRequestLocale(locale);
+  unstable_setRequestLocale(locale);  
   const t = useTranslations('Index');
+
   return (
     <Container>
       <Stack spacing={2}>
+        <Typography component={"h4"} variant={"h4"}>
+        </Typography>
         <Typography component={"h1"} variant={"h1"}>
-          {t('title')}
+          {t.rich('title')}
         </Typography>
         <Typography component={"p"} variant={"body1"}>
           {t.rich('greeting')}
@@ -24,9 +27,9 @@ export default function Page({ params: { locale } }: Props) {
           {t.rich('introduction')}
         </Typography>
         <Typography component={"p"} variant={"body1"}>
-          {t('please-subscribe')}
+          {t.rich('please-subscribe')}
         </Typography>
-        <SocialLinks/>
+        <SocialLinks />
       </Stack>
     </Container>
   );

@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@auth0/nextjs-auth0": "^3.5.0",
     "@emotion/cache": "^11.11.0",
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
@@ -28,7 +29,9 @@
     "next-swagger-doc": "^0.4.0",
     "qs": "^6.12.1",
     "react": "^18",
+    "react-animated-cursor": "^2.11.2",
     "react-dom": "^18",
+    "react-intersection-observer": "^9.10.3",
     "swagger-ui-react": "^5.17.12"
   },
   "devDependencies": {

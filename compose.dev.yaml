@@ -1,0 +1,79 @@
+
+services:
+  mariadb:
+    image: mariadb
+    build:
+      context: ./db/mariadb
+      dockerfile: Dockerfile
+    restart: always
+    environment:
+      MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
+      MARIADB_DATABASE: ${MARIADB_DATABASE}
+    volumes:
+      - mariadb-data:/var/lib/mysql
+    networks:
+      - app-network
+
+  phpmyadmin:
+    image: phpmyadmin
+    build:
+      context: ./db/phpmyadmin
+      dockerfile: Dockerfile
+    restart: always
+    environment:
+      PMA_HOST: mariadb
+      PMA_USER: root
+      PMA_PASSWORD: ${MARIADB_ROOT_PASSWORD}
+    networks:
+      - app-network
+      
+
+  manager:
+    image: manager
+    build:
+      context: ./manager
+      dockerfile: Dockerfile
+    volumes:
+      - manager-data:/root/.local/share/Manager
+    networks:
+      - app-network
+    hostname: web.local
+    
+
+  nextjs:
+    image: nextjs
+    build:
+      context: ./nextjs
+      dockerfile: Dockerfile.dev
+    volumes:
+      - ./nextjs:/app:cached
+      - ./nextjs/node_modules:/app/node_modules
+    networks:
+      - app-network
+
+  proxy:
+    image: proxy
+    build:
+      context: ./proxy/dev
+      dockerfile: Dockerfile
+    ports:
+      - 80:80
+      - 8000:8000
+      - 9000:9000
+      # - 443:443
+    volumes:
+      - ./proxy/dev/conf.d:/etc/nginx/conf.d
+    # depends_on:
+    #   - mariadb
+    #   - phpmyadmin
+    #   - manager
+    #   - nextjs
+    networks:
+      - app-network
+
+volumes:
+  manager-data:
+  mariadb-data:
+
+networks:
+  app-network:

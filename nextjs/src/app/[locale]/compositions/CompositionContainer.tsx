@@ -1,33 +1,29 @@
-import { Container } from "@mui/material";
-import { unstable_setRequestLocale } from "next-intl/server";
+"use client"
+import { Box, Container, Divider, Stack, Typography } from "@mui/material";
+import RenderMediaContainer from "./media_container/RenderMediaContainer";
+// import {CircularProgress} from "@mui/material";
 
 type Props = {
-    url: string;
-    description: string;
-    locale: string;
+  url: string;
+  title: string;
+  description: string;
 };
-export default function CompositionContainer({ url, description, locale }: Props) {
-    // Enable static rendering
-    // unstable_setRequestLocale(locale);
-    return (
-        <Container>
-            {url}, 
-            {description}
-            {/* <Stack spacing={2}>
-           <Typography component={"h1"} variant={"h1"}>
-             {t('title')}
-           </Typography>
-           <Typography component={"p"} variant={"body1"}>
-             {t.rich('greeting')}
-           </Typography>
-           <Typography component={"p"} variant={"body1"}>
-             {t.rich('introduction')}
-           </Typography>
-           <Typography component={"p"} variant={"body1"}>
-             {t('please-subscribe')}
-           </Typography>
-           <SocialLinks/>
-         </Stack> */}
-        </Container>
-    );
+export default function CompositionContainer({ url, title, description }: Props) {
+  // Enable static rendering
+  return (
+    <>
+      <Divider />
+      <Box sx={{ pt: 1, pb: 1 }}>
+          <Stack spacing={1}>
+            <Typography component={"h4"} variant={"h4"}>
+              {title}
+            </Typography>
+            <RenderMediaContainer url={url} />
+            <Typography component={"p"} variant={"body1"}>
+              {description}
+            </Typography>
+          </Stack>
+      </Box>
+    </>
+  );
 }

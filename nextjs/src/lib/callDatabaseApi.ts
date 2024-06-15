@@ -4,7 +4,7 @@ export async function callDatabaseApi(
   action: 'findMany' | 'findUnique' | 'create' | 'update' | 'delete',
   data: any = {}
 ): Promise<any> {
-  const response = await fetch(`/api/db/curd?table=${table}&action=${action}`, {
+  const response = await fetch(`/api/db/crud?table=${table}&action=${action}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

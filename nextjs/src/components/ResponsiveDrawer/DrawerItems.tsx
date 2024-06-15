@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import * as React from 'react';
 import Divider from '@mui/material/Divider';
 import List from '@mui/material/List';
@@ -6,27 +6,17 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import Toolbar from '@mui/material/Toolbar';
-
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { IconDefinition } from '@fortawesome/free-solid-svg-icons';
 import { useState } from 'react';
 import { Collapse } from '@mui/material';
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
 import { Link } from '@/navigation';
 import { useTranslations } from 'next-intl';
+import { ItemListType } from './ItemListUser';
 
-
-type DrawerItemProps = {
-  Name: string;
-  Icon: IconDefinition;
-  Link: string;
-  Items?: DrawerItemProps;  // Optional nested items
-}[];
-
-export default function DrawerItems({ items }: { items: DrawerItemProps }) {
+function RenderItems({ items, depth = 1 }: { items: ItemListType[], depth?: number }) {
   const [open, setOpen] = useState<{ [key: string]: boolean }>({});
-  const t = useTranslations('DrawerMenu');
+  const translate = useTranslations('DrawerMenu');
 
   const handleClick = (name: string) => {
     setOpen(prevState => ({
@@ -34,54 +24,51 @@ export default function DrawerItems({ items }: { items: DrawerItemProps }) {
       [name]: !prevState[name],
     }));
   };
-
   return (
-    <div>
-      <Toolbar />
-      <Divider />
-      <List>
-        {items.map((item, index) => (
+    <>
+      {
+        items.map((item, index) => (
           <React.Fragment key={index}>
             <ListItem disablePadding>
-              <Link href={item.Link}>
+              <Link href={item.Link} target={item.Target ? item.Target : "_self"}>
                 <ListItemButton
-                  component="div"
                   onClick={item.Items ? (e) => {
                     e.preventDefault();
                     handleClick(item.Name);
                   } : undefined}
+                  sx={{ pl: depth * 2 }}
                 >
                   <ListItemIcon>
                     <FontAwesomeIcon icon={item.Icon} />
                   </ListItemIcon>
-                  <ListItemText primary={t(item.Name)} />
+                  <ListItemText primary={translate(item.Name)} />
                   {item.Items ? (open[item.Name] ? <ExpandLess /> : <ExpandMore />) : null}
                 </ListItemButton>
               </Link>
             </ListItem>
+            {/* this recursively renders items */}
             {item.Items && (
               <Collapse in={open[item.Name]} timeout="auto" unmountOnExit>
-                <List component="div" disablePadding>
-                  {item.Items.map((nestedItem, nestedIndex) => (
-                    <ListItem key={nestedIndex} disablePadding>
-                      <Link href={nestedItem.Link}>
-                        <ListItemButton sx={{ pl: 4 }}>
-                          <ListItemIcon>
-                            <FontAwesomeIcon icon={nestedItem.Icon} />
-                          </ListItemIcon>
-                          <ListItemText primary={t(nestedItem.Name)} />
-                        </ListItemButton>
-                      </Link>
-                    </ListItem>
-                  ))}
+                <List disablePadding>
+                  <RenderItems items={item.Items} depth={depth + 1} />
                 </List>
               </Collapse>
             )}
           </React.Fragment>
-
         ))
-        }
-      </List>
-    </div>
+      }
+    </>
   )
+}
+
+
+export default function DrawerItems({ items }: { items: ItemListType[] }) {
+  return (
+    <>
+      <Divider />
+      <List>
+        <RenderItems items={items} />
+      </List>
+    </>
+  );
 }

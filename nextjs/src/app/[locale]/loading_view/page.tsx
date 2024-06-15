@@ -1,7 +1,8 @@
 import { Box, LinearProgress } from "@mui/material";
+import {Skeleton} from "@mui/material";
 
-export default function PageLoading() {
-    // You can add any UI inside Loading, including a Skeleton.
+// Here is the test page to check how the loading view will be shown
+export default function LoadingView() {
     return (
         <Box
             sx={{
@@ -9,7 +10,7 @@ export default function PageLoading() {
                 height: "80vh"
             }}
         >
-                <LinearProgress/>
+                <Skeleton/>
         </Box>
     )
 }
