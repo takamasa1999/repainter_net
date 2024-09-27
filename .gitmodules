@@ -1,0 +1,3 @@
+[submodule "faster-whisper-server"]
+	path = faster-whisper-server
+	url = git@github.com:fedirz/faster-whisper-server.git
