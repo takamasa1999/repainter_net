@@ -5,10 +5,12 @@ import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 import { UserProfile, useUser } from '@auth0/nextjs-auth0/client';
 import DrawerItems from './DrawerItems';
-import { ItemListUser } from './ItemListUser';
+import { ItemListUser } from '../../config/ItemListUser';
 import LocaleSwitcher from '../LocaleSwitcher';
-import { ItemListAdmin } from './ItemListAdmin';
+import { ItemListAdmin } from '../../config/ItemListAdmin';
 import LoginOutMenu from './LoginOutMenu';
+import { useInView } from 'react-intersection-observer';
+import { useScreenButtomStore } from '../../stores/useScreenButtomStore';
 
 const drawerWidth = 240;
 
@@ -33,12 +35,23 @@ export default function ResponsiveDrawer(props: {
   const [isClosing, setIsClosing] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const { user } = useUser();
+  const { ref, inView } = useInView({ threshold: 1 })
+  const { setIsScreenButtom } = useScreenButtomStore()
 
   useEffect(() => {
-    if (user?.email === process.env.NEXT_PUBLIC_ADMIN_EMAIL_ADDRESS) {
+    const isUserUndefined = user === undefined;
+    const adminEmail = process.env.NEXT_PUBLIC_ADMIN_EMAIL_ADDRESS
+    const userEmail = user?.email
+
+    if (!isUserUndefined && adminEmail === userEmail) {
       setIsAdmin(true);
     }
   }, [user]);
+
+  useEffect(() => {
+    setIsScreenButtom(inView)
+  }, [inView, setIsScreenButtom])
+
 
   const t = useTranslations('Metadata');
 
@@ -121,8 +134,12 @@ export default function ResponsiveDrawer(props: {
           overflow: 'auto', // Ensure content is scrollable if it overflows
         }}
       >
+        {/* the below element is placed to adjust the starting point of child elements. */}
+        {/* without this element, those child elemetns will be covered by drawer */}
         <Toolbar />
         {props.children}
+        {/* the component below is used to check if your scrool reached to the buttom */}
+        <div ref={ref} style={{ height: "1px" }} />
       </Box>
     </Box>
   );

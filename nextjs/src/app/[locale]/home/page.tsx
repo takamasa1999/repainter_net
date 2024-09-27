@@ -15,8 +15,6 @@ export default function Page({ params: { locale } }: Props) {
   return (
     <Container>
       <Stack spacing={2}>
-        <Typography component={"h4"} variant={"h4"}>
-        </Typography>
         <Typography component={"h1"} variant={"h1"}>
           {t.rich('title')}
         </Typography>

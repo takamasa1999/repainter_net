@@ -5,14 +5,14 @@
     "author": "Takamasa Sato",
     "keywords": "Oita, Japan, Beatboxing, Vocal Percussion, Piano, Music, Hip-Hop, Rap"
   },
-  "DrawerMenu":{
+  "DrawerMenu": {
     "home": "Home",
     "compositions": "Compositions",
-    "chat_space": "Chat space",
-    "myadmin":"phpmyadmin",
+    "your_voice": "Your voice",
+    "myadmin": "phpmyadmin",
     "welcome_back": "Welcome back,<br></br> {user}!",
-    "login":"Log-in",
-    "logout":"Log-out"
+    "login": "Log-in",
+    "logout": "Log-out"
   },
   "LocaleSwitcher": {
     "label": "Language",
@@ -20,8 +20,11 @@
   },
   "Index": {
     "title": "About Me",
-    "greeting":"Hello there! What time might it be where you are? <br></br>Putting that aside, I had a thought that it would be handy to have a spot online for a quick introduction and to share what I'm up to, hence this website came to be. You might have landed here by scanning the QR code on one of my quirky business cards, or perhaps you've stumbled upon this page during your internet adventures.<br></br>Either way, this is a meeting of sorts, so why not stay a while and relax with a cup of tea in hand?",
-    "introduction":"So, you're probably wondering, 'Who is this person?' <br></br>I'm a musician known as 'The Repainter'. Born in Oita in 1999, I dove into beatboxing at 14 and ventured into digital music production at 17. I celebrated my 20th birthday—and adulthood—by picking up the piano, feeling it was a festive thing to do. My musical beginnings were rooted in rhythm, crafting dance tunes like EDM and Dubstep, but the piano led me to the captivating world of chords, steering me towards R&B and City Pop.<br></br>Now at 25, in the year 2024, I find myself in a bit of a life rush, but I'm powering through with my signature optimism and a dash of muscle power. As AI takes the spotlight with its rapid growth, I can't help but feel my memory and intellect might be on the decline. In these fast-changing times, I wonder, what's next for me?",
-    "please-subscribe":"Here are the platforms where I'm most active. Look out for my new tracks on Spotify and YouTube. May the spirit bomb guide you to hit that subscribe button!"
+    "greeting": "Hello there! What time might it be where you are? <br></br>Putting that aside, I had a thought that it would be handy to have a spot online for a quick introduction and to share what I'm up to, hence this website came to be. You might have landed here by scanning the QR code on one of my quirky business cards, or perhaps you've stumbled upon this page during your internet adventures.<br></br>Either way, this is a meeting of sorts, so why not stay a while and relax with a cup of tea in hand?",
+    "introduction": "So, you're probably wondering, 'Who is this person?' <br></br>I'm a musician known as 'The Repainter'. Born in Oita in 1999, I dove into beatboxing at 14 and ventured into digital music production at 17. I celebrated my 20th birthday—and adulthood—by picking up the piano, feeling it was a festive thing to do. My musical beginnings were rooted in rhythm, crafting dance tunes like EDM and Dubstep, but the piano led me to the captivating world of chords, steering me towards R&B and City Pop.<br></br>Now at 25, in the year 2024, I find myself in a bit of a life rush, but I'm powering through with my signature optimism and a dash of muscle power. As AI takes the spotlight with its rapid growth, I can't help but feel my memory and intellect might be on the decline. In these fast-changing times, I wonder, what's next for me?",
+    "please-subscribe": "Here are the platforms where I'm most active. Look out for my new tracks on Spotify and YouTube. May the spirit bomb guide you to hit that subscribe button!"
+  },
+  "YourVoice":{
+    "introduction": "Hello, this place is made for kinda expariment. You can gererate text only using your voice. Not like ordinary chat space there isn't text box you can type with your keyboard. You have to utter them if you wanna input. Well, what're you gonna left here?"
   }
 }

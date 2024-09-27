@@ -1,0 +1,14 @@
+services:
+  debezium-example:
+    image: debezium/example-postgres
+    environment:
+      POSTGRES_PASSWORD: "password"
+  nvidia-test:
+    image: nvcr.io/nvidia/k8s/cuda-sample:nbody
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              capabilities: [gpu]
+    command: nbody -gpu -benchmark

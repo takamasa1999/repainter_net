@@ -12,7 +12,7 @@ import { getMessages, getTranslations, unstable_setRequestLocale } from 'next-in
 import { locales } from "@/i18n";
 import { UserProvider } from '@auth0/nextjs-auth0/client';
 import AnimatedCursor from "react-animated-cursor"
-import { Suspense } from "react";
+import GeneralAlert from "./GeneralAlert";
 
 
 const inter = Inter({ subsets: ["latin"] });
@@ -54,14 +54,17 @@ export default async function LocaleLayout({
     <html lang={locale}>
       <body className={inter.className}>
         {/* <Suspense fallback={"LoadingView..."}> */}
-          <AnimatedCursor innerStyle={{ zIndex: 9999 }} outerStyle={{ zIndex: 9999 }} showSystemCursor={true} />
-          <AppRouterCacheProvider>
-            <UserProvider>
-              <MyCustomNextIntlClientProvider messages={messages} locale={locale} now={now} timeZone={timeZone}>
-                <ResponsiveDrawer>{children}</ResponsiveDrawer>
-              </MyCustomNextIntlClientProvider>
-            </UserProvider>
-          </AppRouterCacheProvider>
+        <AnimatedCursor innerStyle={{ zIndex: 9999 }} outerStyle={{ zIndex: 9999 }} showSystemCursor={true} />
+        <AppRouterCacheProvider>
+          <UserProvider>
+            <MyCustomNextIntlClientProvider messages={messages} locale={locale} now={now} timeZone={timeZone}>
+              <ResponsiveDrawer>
+                {children}
+              </ResponsiveDrawer>
+              <GeneralAlert />
+            </MyCustomNextIntlClientProvider>
+          </UserProvider>
+        </AppRouterCacheProvider>
         {/* </Suspense> */}
       </body>
     </html>

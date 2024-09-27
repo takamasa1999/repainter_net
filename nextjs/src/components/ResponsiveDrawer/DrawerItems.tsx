@@ -12,7 +12,7 @@ import { Collapse } from '@mui/material';
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
 import { Link } from '@/navigation';
 import { useTranslations } from 'next-intl';
-import { ItemListType } from './ItemListUser';
+import { ItemListType } from '../../config/ItemListUser';
 
 function RenderItems({ items, depth = 1 }: { items: ItemListType[], depth?: number }) {
   const [open, setOpen] = useState<{ [key: string]: boolean }>({});
@@ -34,21 +34,21 @@ function RenderItems({ items, depth = 1 }: { items: ItemListType[], depth?: numb
                 <ListItemButton
                   onClick={item.Items ? (e) => {
                     e.preventDefault();
-                    handleClick(item.Name);
+                    handleClick(item.MessageKey);
                   } : undefined}
                   sx={{ pl: depth * 2 }}
                 >
                   <ListItemIcon>
                     <FontAwesomeIcon icon={item.Icon} />
                   </ListItemIcon>
-                  <ListItemText primary={translate(item.Name)} />
-                  {item.Items ? (open[item.Name] ? <ExpandLess /> : <ExpandMore />) : null}
+                  <ListItemText primary={translate(item.MessageKey)} />
+                  {item.Items ? (open[item.MessageKey] ? <ExpandLess /> : <ExpandMore />) : null}
                 </ListItemButton>
               </Link>
             </ListItem>
-            {/* this recursively renders items */}
+            {/* the code below recursively renders items */}
             {item.Items && (
-              <Collapse in={open[item.Name]} timeout="auto" unmountOnExit>
+              <Collapse in={open[item.MessageKey]} timeout="auto" unmountOnExit>
                 <List disablePadding>
                   <RenderItems items={item.Items} depth={depth + 1} />
                 </List>

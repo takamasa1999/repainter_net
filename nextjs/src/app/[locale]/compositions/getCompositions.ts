@@ -37,5 +37,3 @@ export default async function getCompositions({ locale, skip, take }: getComposi
 
     return formatted
 }
-
-export type CompositionsType = Awaited<ReturnType<typeof getCompositions>>;

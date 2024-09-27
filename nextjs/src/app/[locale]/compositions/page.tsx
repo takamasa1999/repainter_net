@@ -2,9 +2,10 @@
 import { CircularProgress, Container } from "@mui/material";
 import { useEffect } from 'react';
 import CompositionContainer from './CompositionContainer';
-import { useCompositions } from './useCompositions';
-import { useInView } from "react-intersection-observer";
+import { useScreenButtomStore } from "@/stores/useScreenButtomStore";
 import { Grid } from "@mui/material";
+import { usePaginatedData } from '../../../hooks/usePaginatedData';
+import getCompositions from "./getCompositions";
 
 type Props = {
   params: { locale: string };
@@ -13,21 +14,24 @@ type Props = {
 
 export default function Page({ params: { locale } }: Props) {
   const take = 2;
-  const { ref, inView } = useInView({ threshold: 1 })
-  const { compositions, loadMore, loading, hasMore } = useCompositions(locale, take)
+  // const { compositions, loadMore, loading, hasMore } = useCompositions(locale, take)
+  const { isScreenButtom } = useScreenButtomStore()
+  const { data, loadMore, hasMore, loading } = usePaginatedData(
+    getCompositions, {locale: locale, skip: 0,take: take}
+  )
 
   useEffect(() => {
-    if (inView && !loading && hasMore) {
+    if (isScreenButtom && hasMore) {
       loadMore()
     }
-  }, [inView, loading, loadMore, hasMore])
+  }, [isScreenButtom, hasMore, loadMore])
 
 
   return (
     <Container>
       <Grid container spacing={2}>
         {
-          compositions.map((data, key) => (
+          data.map((data, key) => (
             <Grid item key={key} xs={12} md={6} lg={4}>
               <CompositionContainer
                 url={data.url}
@@ -39,13 +43,12 @@ export default function Page({ params: { locale } }: Props) {
         }
         {loading &&
           // Array.from({ length: take }).map((_, index) => (
-            <Grid item xs={12} md={6} lg={4}>
-              <CircularProgress/>
-            </Grid>
+          <Grid item xs={12} md={6} lg={4}>
+            <CircularProgress />
+          </Grid>
           // ))
         }
       </Grid>
-      <div ref={ref} style={{ height: "1px" }} />
     </Container>
   );
 }

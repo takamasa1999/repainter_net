@@ -1,5 +1,5 @@
 # Ubuntuをベースイメージとして使用
-FROM debian:latest
+FROM debian:12.6
 
 RUN apt-get update && \
     apt-get install -y wget tar libicu-dev && \

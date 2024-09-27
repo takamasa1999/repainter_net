@@ -1,5 +1,5 @@
 "use client"
-import { Box, Container, Divider, Stack, Typography } from "@mui/material";
+import { Box, Divider, Stack, Typography } from "@mui/material";
 import RenderMediaContainer from "./media_container/RenderMediaContainer";
 // import {CircularProgress} from "@mui/material";
 

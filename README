@@ -1,0 +1,9 @@
+Development
+  environment: debian
+  Devops: Docker & CircleCI
+
+
+Nextjs
+  Libraries
+    Authentification: https://github.com/auth0/nextjs-auth0
+    Multilingual: https://next-intl-docs-git-feat-next-13-rsc-next-intl.vercel.app/docs/getting-started
