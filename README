@@ -1,3 +1,6 @@
+Clone with the command below to include submodules
+git clone --recurse-submodules git@github.com:takamasa1999/repainter_net.git
+
 Development
   environment: debian
   Devops: Docker & CircleCI
