@@ -63,28 +63,9 @@ services:
   #             capabilities: [ gpu ]
 
   faster-whisper-server:
-    image: faster-whisper-server
-    container_name: faster-whisper-server
-    build:
-      context: ./faster-whisper-server
-      dockerfile: Dockerfile.cuda
-      platforms:
-        - linux/amd64
-        - linux/arm64
-    volumes:
-      - faster-whisper-huggingface:/root/.cache/huggingface
-    restart: unless-stopped
-    ports:
-      - 8000:8000
-    develop:
-      watch:
-        - path: faster_whisper_server
-          action: rebuild
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - capabilities: [ "gpu" ]
+    extends:
+      file: ./faster-whisper-server/compose.yaml
+      service: faster-whisper-server-cuda
 
   nextjs:
     image: nextjs
@@ -174,7 +155,7 @@ volumes:
   manager-data:
   mysql-data: # fastapi-cache:
   nextjs-cache:
-  faster-whisper-huggingface:
+  hugging_face_cache:
 
 
 networks:
