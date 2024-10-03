@@ -16,6 +16,9 @@ export default function Page({ params: { locale } }: Props) {
   const [shouldLoadMore, setShouldLoadMore] = useState(false)
   const t = useTranslations('YourVoice');
   function closeDialog() { setIsOpenDialog(false) }
+  function onRegisteredNew(){
+    
+  }
 
   const {isScreenButtom} = useScreenButtomStore()
 
@@ -26,9 +29,6 @@ export default function Page({ params: { locale } }: Props) {
       setShouldLoadMore(false)
     }
   }, [isScreenButtom])
-
-  function onRegisteredNew() {
-  }
 
   return (
     <Container>

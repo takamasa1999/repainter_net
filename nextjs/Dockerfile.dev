@@ -10,4 +10,3 @@ CMD npx prisma migrate deploy && npx prisma generate && npx next dev
 
 
 # CMD tail -f /dev/null
-#     tail -f /dev/null

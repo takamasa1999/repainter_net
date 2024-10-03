@@ -35,37 +35,12 @@ services:
     networks:
       - app-network
 
-  # manager:
-  #   image: manager
-  #   build:
-  #     context: ./manager
-  #     dockerfile: Dockerfile
-  #   volumes:
-  #     - manager-data:/root/.local/share/Manager
-  #   networks:
-  #     - app-network
-
-  # fastapi:
-  #   image: fastapi
-  #   container_name: fastapi
-  #   build:
-  #     context: ./fastapi
-  #     dockerfile: Dockerfile.dev
-  #   volumes:
-  #     - ./fastapi:/app
-  #     - fastapi-cache:/root/.cache
-  #   deploy:
-  #     resources:
-  #       reservations:
-  #         devices:
-  #           - driver: nvidia
-  #             count: all
-  #             capabilities: [ gpu ]
-
   faster-whisper-server:
     extends:
       file: ./faster-whisper-server/compose.yaml
       service: faster-whisper-server-cuda
+    environment:
+      - ALLOW_ORIGINS=${FWS_ALLOW_ORIGINS}
 
   nextjs:
     image: nextjs
@@ -109,6 +84,7 @@ services:
     image: quay.io/debezium/zookeeper:2.7
     container_name: zookeeper
     ports:
+      - 8080:8080
       - "2181:2181"
       - "2888:2888"
       - "3888:3888"
@@ -121,9 +97,9 @@ services:
     links:
       - zookeeper
     environment:
+      - BROKER_ID:1
       - ZOOKEEPER_CONNECT=zookeeper:2181
-      # - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://172.0.0.1:9092
-      # - KAFKA_LISTENERS=PLAINTEXT://172.0.0.1:9092
+      - KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
     depends_on:
       zookeeper:
         condition: service_started
@@ -138,8 +114,6 @@ services:
       - CONFIG_STORAGE_TOPIC=my_connect_configs
       - OFFSET_STORAGE_TOPIC=my_connect_offsets
       - STATUS_STORAGE_TOPIC=my_connect_statuses
-      - CONNECT_LISTENERS=PLAINTEXT://172.19.0.3:9092
-      - CONNECT_ADVERTISED_LISTENERS=PLAINTEXT://172.19.0.3:9092
     links:
       - kafka
       - mysql
@@ -148,7 +122,7 @@ services:
         condition: service_started
       kafka:
         condition: service_started
-    command: tail -F anything
+    # command: tail -F anything
 
 
 volumes:
