@@ -1,39 +1,91 @@
 version: '3'
 
 services:
-  mysql:
-    image: mysql
-    build:
-      context: ./db/mysql
-      dockerfile: Dockerfile
-    restart: always
+  # mysql:
+  #   image: mysql
+  #   build:
+  #     context: ./db/mysql
+  #     dockerfile: Dockerfile
+  #   restart: always
 
-    environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
-    volumes:
-      - mysql-data:/var/lib/mysql
-    networks:
-      - app-network
+  #   environment:
+  #     MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+  #     MYSQL_DATABASE: ${MYSQL_DATABASE}
+  #   volumes:
+  #     - mysql-data:/var/lib/mysql
+  #   # networks:
+  #   #   - app-network
 
-  # mysql-client:
-  #   image: mysql:8.2
+
+
+  # phpmyadmin:
+  #   image: phpmyadmin
+  #   build:
+  #     context: ./db/phpmyadmin
+  #     dockerfile: Dockerfile
+  #   restart: always
+  #   environment:
+  #     PMA_HOST: mysql
+  #     PMA_USER: root
+  #     PMA_PASSWORD: ${MYSQL_ROOT_PASSWORD}
   #   networks:
   #     - app-network
-  #   command: tail -F anything
 
-  phpmyadmin:
-    image: phpmyadmin
-    build:
-      context: ./db/phpmyadmin
-      dockerfile: Dockerfile
-    restart: always
+  zookeeper:
+    container_name: zookeeper
+    image: quay.io/debezium/zookeeper:${DEBEZIUM_VERSION}
+    ports:
+      - 2181:2181
+      - 2888:2888
+      - 3888:3888
+
+  kafka:
+    container_name: kafka
+    image: quay.io/debezium/kafka:${DEBEZIUM_VERSION}
+    ports:
+      - 9092:9092
+    depends_on:
+      - zookeeper
     environment:
-      PMA_HOST: mysql
-      PMA_USER: root
-      PMA_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-    networks:
-      - app-network
+      - ZOOKEEPER_CONNECT=zookeeper:2181
+
+  connect:
+    image: quay.io/debezium/connect:${DEBEZIUM_VERSION}
+    ports:
+      - 8083:8083
+    depends_on:
+      - kafka
+      - db
+    environment:
+      - BOOTSTRAP_SERVERS=kafka:9092
+      - GROUP_ID=1
+      - CONFIG_STORAGE_TOPIC=my_connect_configs
+      - OFFSET_STORAGE_TOPIC=my_connect_offsets
+      - STATUS_STORAGE_TOPIC=my_connect_statuses
+
+  db:
+    image: postgres:17
+    restart: always
+    # set shared memory limit when using docker-compose
+    shm_size: 128mb
+    # or set shared memory limit when deploy via swarm stack
+    #volumes:
+    #  - type: tmpfs
+    #    target: /dev/shm
+    #    tmpfs:
+    #      size: 134217728 # 128*2^20 bytes = 128Mb
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+    command: [ "postgres", "-c", "wal_level=logical" ]
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
 
   faster-whisper-server:
     extends:
@@ -54,11 +106,13 @@ services:
     ports:
       - 3000:3000
       - 5555:5555
-    networks:
-      - app-network
-    # depends_on:
-    #   mysql:
-    #     condition: service_started
+    # networks:
+    #   - app-network
+    depends_on:
+      db:
+        condition: service_started
+      faster-whisper-server:
+        condition: service_started
 
   proxy:
     image: proxy
@@ -67,71 +121,17 @@ services:
       dockerfile: Dockerfile
     ports:
       - 80:80
-      - 9000:9000
-      # - 5555:5555
-      # - 443:443
     volumes:
       - ./proxy/dev/conf.d:/etc/nginx/conf.d
-    # depends_on:
-    #   - mysql
-    #   - phpmyadmin
-    #   - manager
-    #   - nextjs
-    networks:
-      - app-network
-
-  zookeeper:
-    image: quay.io/debezium/zookeeper:2.7
-    container_name: zookeeper
-    ports:
-      - 8080:8080
-      - "2181:2181"
-      - "2888:2888"
-      - "3888:3888"
-
-  kafka:
-    image: quay.io/debezium/kafka:2.7
-    container_name: kafka
-    ports:
-      - "9092:9092"
-    links:
-      - zookeeper
-    environment:
-      - BROKER_ID:1
-      - ZOOKEEPER_CONNECT=zookeeper:2181
-      - KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
     depends_on:
-      zookeeper:
-        condition: service_started
-
-  kafka-connector:
-    image: quay.io/debezium/connect:2.7
-    container_name: kafka-connector
-    ports:
-      - "8083:8083"
-    environment:
-      - GROUP_ID=1
-      - CONFIG_STORAGE_TOPIC=my_connect_configs
-      - OFFSET_STORAGE_TOPIC=my_connect_offsets
-      - STATUS_STORAGE_TOPIC=my_connect_statuses
-    links:
-      - kafka
-      - mysql
-    depends_on:
-      mysql:
-        condition: service_started
-      kafka:
-        condition: service_started
-    # command: tail -F anything
-
+      - adminer
+      - nextjs
+    # networks:
+    #   - app-network
 
 volumes:
-  manager-data:
-  mysql-data: # fastapi-cache:
   nextjs-cache:
   hugging_face_cache:
 
-
-networks:
-  app-network:
-  cdc-network: # external: true
+# networks:
+#   app-network:

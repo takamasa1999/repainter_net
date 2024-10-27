@@ -13,5 +13,4 @@ export default function GeneralAlert() {
             <Alert severity={alertSeverity}>{alertMessage}</Alert>
         </Snackbar>
     )
-
 }

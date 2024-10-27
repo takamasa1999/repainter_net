@@ -12,4 +12,8 @@ services:
             - driver: nvidia
               capabilities: [gpu]
     command: nbody -gpu -benchmark
-  
+  ubuntu-client:
+    build:
+      context: ./ubuntu-client
+      dockerfile: Dockerfile
+    

@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "postgres"
   url      = env("DATABASE_URL")
 }
 
@@ -19,18 +19,16 @@ model composition {
 
 model voice_space {
   id             Int      @id @default(autoincrement())
-  registered_at  DateTime @db.DateTime
-  last_update_at DateTime @db.DateTime
+  registered_at  DateTime @db.Timestamptz
+  last_update_at DateTime @db.Timestamptz
   space_name     String   @unique @db.VarChar(300)
   voices         voice[]
 }
 
 model voice {
   id            Int          @id @default(autoincrement())
-  registered_at DateTime     @db.DateTime
+  registered_at DateTime     @db.Timestamptz
   dictated_text String       @db.Text
   voice_spaceId Int?
   voice_space   voice_space? @relation(fields: [voice_spaceId], references: [id])
-
-  @@index([voice_spaceId], map: "voice_voice_spaceId_fkey")
 }
